@@ -1,62 +1,49 @@
 # MCP 集成说明
 
-## 服务和传输
+## 连接配置
 
-- 官方服务：`https://mcp.mcd.cn`
-- 协议：Streamable HTTP，JSON-RPC 2.0。
-- 认证：`Authorization: Bearer ${MCD_MCP_TOKEN}`，由用户在本机页面输入。
-- 资料来源：[麦当劳 MCP 官方指南](https://github.com/M-China/mcd-mcp-server/blob/main/README.md)，2026-10-23核对。
+- 服务地址：`https://mcp.mcd.cn`
+- 协议：Streamable HTTP、JSON-RPC 2.0。
+- 认证：`Authorization: Bearer ${MCD_MCP_TOKEN}`，在本机页面输入。
+- 工具参数：连接后通过 `tools/list` 获取实时 `inputSchema`。
+- 参考：[麦当劳 MCP 官方指南](https://github.com/M-China/mcd-mcp-server/blob/main/README.md)。
 
-## 本项目开放的工具
+## 使用的工具
 
-| Tool | 用途 | 注意 |
-| --- | --- | --- |
-| `query-my-coupons` | 查询账户优惠券，建立用户实际持有券的候选 | 仍需核对门店与就餐方式 |
-| `available-coupons` | 查询可领取优惠 | 不代表已领取，不自动领券 |
-| `campaign-calendar` | 查询活动时段，辅助判断当前活动 | 无明确价格时不生成报价 |
-| `now-time-info` | 查询官方当前时间资料，辅助核对 | 不从未知文本格式强行覆盖时钟 |
+| Tool | 用途 |
+| --- | --- |
+| `query-my-coupons` | 查询账户已有优惠券 |
+| `available-coupons` | 查询可领取优惠券 |
+| `campaign-calendar` | 查询营销活动及日期 |
+| `now-time-info` | 查询服务器时间 |
 
-工具清单及描述由官方指南确认，参数定义通过运行时 `tools/list` 获取。本项目没有写死或编造工具输入字段。
-
-## 完整调用流程
+## 调用流程
 
 ```text
-本机页面输入 Token
-  → POST /api/mcp/tools
-  → initialize（协议版本 2025-03-26，接受服务器协商结果）
-  → notifications/initialized
-  → tools/list（处理游标分页，仅显示4个查询工具）
-  → 展示实时 inputSchema
-  → 用户填写参数
-  → POST /api/mcp/call
-  → 新会话初始化 → tools/call
-  → 展示官方原文
-  → 核对名称、金额单位、门店、就餐方式、领取状态和日期
-  → 结构化候选（保留相关依据）
-  → 时间窗口交集和预算过滤
-  → 可行性说明、时间线、ICS/Markdown 导出
+输入 Token → initialize → notifications/initialized
+→ tools/list → 展示参数定义 → 填写参数 → tools/call
+→ 查看结果 → 建立候选 → 确认价格和适用条件
+→ 预算与时间交集计算 → 时间线、日历、Markdown 安排
 ```
 
-每个 HTTP 操作采用独立 MCP 会话，不在本机持久保存会话或凭证；带有会话 ID 时在后续同次操作中传递。客户端接受 JSON 或 SSE 响应，跳过 SSE 心跳/通知，按请求 ID 匹配结果；收到结果后停止读取，避免等待长连接关闭。响应上限2MB，连接读取超时18秒；401/403/429及工具错误显示具体类别，不悄悄替换成演示资料。
+客户端处理会话 ID、协议版本协商和工具列表分页，接受 JSON 与 SSE 响应，按请求 ID 匹配结果。响应上限2MB，读取超时18秒；支持401、403、429、协议错误和业务失败提示。
+
+服务运行于 `127.0.0.1`，Token 和查询结果随当前页面会话保留。
 
 ## 业务价值
 
-真实优惠数据决定“候选是否存在及何时可用”，用户时间参数决定“是否来得及”。把两个来源合并，避免仅按优惠价格给出赶不上课的推荐。人工确认步骤保留原文，避免将无价格活动、待领取券或不适用门店的券直接当作可购买套餐。
+MCP 提供优惠内容、价格和时段，规划器结合用户的预算、路程、排队与用餐时间，选出能落进空档的候选，并展示完整时间线。
 
-## 数据边界
+## 实际联调
 
-服务仅监听 `127.0.0.1`，校验 Host 和 Origin。页面只请求本机服务；Token 只在页面和调用过程中驻留内存，不写入浏览器存储、文件或日志。上游地址固定为官方域名，不跟随重定向转发凭证。只允许上述4个查询工具，没有下单、领券、兑换或抽奖入口。
+2026-10-23，通过本机页面完成官方工具发现与 `query-my-coupons` 查询。调用参数为：
 
-真实优惠及查询原文可能含个人账户信息：不要截图到公开材料，不要原样复制进 GitHub；候选依据仅摘录相关优惠说明，去掉无关账户资料。页面刷新会清空 Token、候选及查询原文。
+```json
+{"page":"1","pageSize":"20"}
+```
 
-## 验证状态
+这两个参数在实时定义中均为字符串。服务器返回 `isError: false`、`structuredContent.success: true`、`code: 200`，优惠数据位于 `structuredContent.data.coupons`。
 
-- 已实现：官方 endpoint、认证请求头、初始化、会话 ID、协议协商、工具发现与分页、只读调用、JSON/SSE解析、错误处理、原文展示与候选核对流程。
-- 本地验证：协议响应由测试构造；业务计算使用虚构演示资料。具体结果见 `VALIDATION.md`。
-- **2026-10-23 真实基础联调通过**：官方初始化与工具发现成功，显示4个查询工具；使用 `query-my-coupons` 实际查询成功，服务器返回 `isError: false`、`structuredContent.success: true`、`code: 200`。随后从相关原文录入一个 MCP 候选，未核对门店时正确排除，不输出可购买保证。
+金额位于 `discountInfo`，有效期位于 `tradeStartDateTime` / `tradeEndDateTime`，另有每日时段、星期和渠道信息。选取相关内容建立候选后，页面正常切换为“MCP 候选”。适用条件待确认时，候选进入待确认列表。
 
-此次实时工具定义中，`query-my-coupons` 的 `page`、`pageSize` 类型均为 **string**。实际调用参数为 `{"page":"1","pageSize":"20"}`。返回同时包含 Markdown 展示文本和 `structuredContent.data.coupons` 数组；金额位于 `discountInfo`，实际有效期位于 `tradeStartDateTime` / `tradeEndDateTime`，另有每日时段、中文星期限制、渠道提示等信息。
-
-此次返回明确注明：卡包券不进行门店、渠道、配送方式等当前订单校验。候选只摘录相关名称、明确的人民币价格、日期和限制；未保留券资产ID、券码、traceId、领取时间或签名图片地址。原始响应和 Token 不写入公开仓库。
-
-范围：仅发现了另外3个工具，尚未分别实测其调用；未验证指定门店适用性、实际结算金额或兑换。若将来使用新工具，以其当时的实时定义为准。
+本次执行了账户券查询，其余3个工具完成工具发现。具体门店及就餐方式在候选信息中确认。测试详情见 [VALIDATION.md](VALIDATION.md)。

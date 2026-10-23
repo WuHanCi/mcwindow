@@ -173,9 +173,9 @@ def calendar(result, offer_id=None):
     utc = lambda v: timestamp(v, "日历时间").astimezone(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     identity = "%s|%s|%s" % (offer["id"], offer["depart_at"], offer["return_at"])
     uid = hashlib.sha256(identity.encode()).hexdigest()[:24] + "@mcwindow.local"
-    description = "预算内预计支出 ¥%.2f；单程和排队为个人预估。订单前须再核对门店、价格及优惠条件。" % (offer["price_fen"] / 100)
+    description = "预计支出 ¥%.2f；按设定的路程、排队和用餐时间安排。" % (offer["price_fen"] / 100)
     if result["source"] == "demo":
-        description = "演示数据，不是真实优惠。" + description
+        description = "演示安排。" + description
     lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//McWindow//Meal Window//ZH", "CALSCALE:GREGORIAN",
              "BEGIN:VEVENT", "UID:" + uid, "DTSTAMP:" + datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ"),
              "DTSTART:" + utc(offer["depart_at"]), "DTEND:" + utc(offer["buffer_until"]),
@@ -185,7 +185,7 @@ def calendar(result, offer_id=None):
 
 
 def report(result):
-    rows = ["# 麦麦空档规划", "", "来源：" + {"demo": "演示数据（非真实优惠）", "mcp": "依据 MCP 资料建立的候选；推荐项已由用户核对", "manual": "手动录入；推荐项已由用户核对"}[result["source"]],
+    rows = ["# 麦麦空档规划", "", "来源：" + {"demo": "演示数据", "mcp": "MCP 查询资料", "manual": "手动录入"}[result["source"]],
             "当前：%s；下次安排：%s；预算：¥%.2f" % (result["now"], result["free_until"], result["budget_fen"] / 100), "", result["message"], ""]
     for item in result["feasible"]:
         rows.extend(["## " + item["name"], "", "预计 ¥%.2f；%s 出发，%s 点单，%s 返回，另留 %d 分钟缓冲。" %

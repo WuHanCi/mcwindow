@@ -98,7 +98,7 @@ class Handler(BaseHTTPRequestHandler):
         except (ValidationError, MCPError, ValueError, TypeError) as exc:
             self.respond(400, {"error": str(exc) if isinstance(exc, (ValidationError, MCPError)) else "请求数据格式错误"})
         except Exception:
-            self.respond(500, {"error": "本机服务遇到异常，请重试；没有保存 Token 或账户响应。"})
+            self.respond(500, {"error": "本机服务遇到异常，请重试。"})
 
 
 def main():

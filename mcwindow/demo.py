@@ -1,4 +1,4 @@
-"""Explicitly fictional data for a reproducible demonstration."""
+"""Sample data for a reproducible demonstration."""
 
 
 def demo():
@@ -6,8 +6,8 @@ def demo():
         return {"id": oid, "name": name, "price_fen": price,
                 "valid_from": "2026-10-23T00:00:00+08:00", "valid_to": end,
                 "daily_windows": windows or [], "verified": True,
-                "evidence": "McWindow 虚构演示资料，不代表麦当劳实际商品、价格或优惠。",
-                "note": "仅用于功能演示"}
+                "evidence": "McWindow 演示数据",
+                "note": "演示候选"}
     return {"source": "demo", "now": "2026-10-23T11:50:00+08:00",
             "free_until": "2026-10-23T13:00:00+08:00", "budget_fen": 2500,
             "travel_minutes": 8, "queue_minutes": 6, "meal_minutes": 20,

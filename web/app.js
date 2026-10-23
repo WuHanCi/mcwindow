@@ -23,7 +23,7 @@ function view(name) {
 function mode() {
   const names={demo:'演示数据',manual:'手动录入',mcp:'MCP 候选'};
   $('mode-label').textContent='◉ '+names[state.source];
-  const messages={demo:'当前使用虚构优惠，所有金额均非真实报价。出发时钟可在下方调整。',manual:'价格、路程和适用条件由你录入；请依据官方渠道核对。',mcp:'候选依据 MCP 查询原文建立；请再次核对门店、时段和实际应付金额。'};
+  const messages={demo:'用示例优惠体验空档规划，出发时间可自行调整。',manual:'填写常用优惠，安排自己的饭点。',mcp:'已导入 MCP 查询结果，可在优惠候选中查看详情。'};
   $('notice').innerHTML='<span>'+names[state.source]+'</span> '+messages[state.source]+(state.source==='demo'?'<button id="real-mode">使用我的数据 ↗</button>':'');
   $('offer-count').textContent=state.offers.length;
   if(state.tools.length) $('connection-status').textContent='已连接，发现 '+state.tools.length+' 个可用查询工具。'+(state.source==='mcp'?'已建立 '+state.offers.length+' 个 MCP 候选；未核对的候选不会直接推荐。':'查询结果尚未作为 MCP 候选导入。');
@@ -79,7 +79,7 @@ function renderResult() {
 }
 function renderOffers() {
   mode();
-  $('offers-list').innerHTML=state.offers.length?state.offers.map(x=>`<article class="offer-row"><div class="offer-data"><strong>${esc(x.name)}</strong><span class="verification ${!x.verified?'pending':''}">${state.source==='demo'?'虚构示例':x.verified?'已核对':'待核对'}</span><p>有效至 ${esc(x.valid_to.slice(0,16).replace('T',' '))} ${x.daily_windows?.length?'· 每日 '+x.daily_windows.map(w=>w.map(esc).join('—')).join(' / '):''}</p><p>${esc(x.note||'未填写附加条件')}</p></div><span class="offer-price">${x.price_fen==null?'待定价':'¥'+yuan(x.price_fen)}</span><div class="row-actions"><button data-edit="${esc(x.id)}">编辑</button><button class="delete" data-remove="${esc(x.id)}">移除</button></div></article>`).join(''):'<div class="empty-state"><h3>给你的空档，放进第一个选择。</h3><p>可手动录入已核对的优惠，或前往 MCP 连接查询。</p><button class="button outline" data-view="connection">连接 MCP ↗</button></div>';
+  $('offers-list').innerHTML=state.offers.length?state.offers.map(x=>`<article class="offer-row"><div class="offer-data"><strong>${esc(x.name)}</strong><span class="verification ${!x.verified?'pending':''}">${state.source==='demo'?'演示':x.verified?'已核对':'待核对'}</span><p>有效至 ${esc(x.valid_to.slice(0,16).replace('T',' '))} ${x.daily_windows?.length?'· 每日 '+x.daily_windows.map(w=>w.map(esc).join('—')).join(' / '):''}</p><p>${esc(x.note||'未填写附加条件')}</p></div><span class="offer-price">${x.price_fen==null?'待定价':'¥'+yuan(x.price_fen)}</span><div class="row-actions"><button data-edit="${esc(x.id)}">编辑</button><button class="delete" data-remove="${esc(x.id)}">移除</button></div></article>`).join(''):'<div class="empty-state"><h3>给你的空档，放进第一个选择。</h3><p>可手动录入已核对的优惠，或前往 MCP 连接查询。</p><button class="button outline" data-view="connection">连接 MCP ↗</button></div>';
 }
 async function loadDemo() {
   try { const data=await api('/api/demo'); state.source='demo'; state.offers=data.offers; state.selected=null; fillForm(data); renderOffers(); await calculate(); }
@@ -97,7 +97,7 @@ function openOffer(id=null,fromMcp=false) {
   $('offer-form').reset();$('offer-error').textContent='';
   const now=$('now').value||chinaNow();
   $('offer-dialog-title').textContent=offer?'编辑优惠候选':'添加优惠候选';
-  $('offer-source-hint').textContent=fromMcp?'根据官方原文录入，不自动猜测金额单位。保存后使用 MCP 候选，演示或手动候选将清空。':state.source==='demo'?'仍处于演示模式，修改只用于演示。':'价格或适用条件不明确时，保留为待核对。';
+  $('offer-source-hint').textContent=fromMcp?'填写优惠信息；保存后替换当前候选。':state.source==='demo'?'编辑示例优惠。':'补充价格、时段和适用条件。';
   $('offer-name').value=offer?.name||'';$('offer-price').value=offer?.price_fen==null?'':yuan(offer.price_fen);
   $('offer-note').value=offer?.note||'';
   $('offer-start').value=offer?localValue(offer.valid_from):now;
@@ -105,7 +105,7 @@ function openOffer(id=null,fromMcp=false) {
   $('offer-window-start').value=offer?.daily_windows?.[0]?.[0]||'';
   $('offer-window-end').value=offer?.daily_windows?.[0]?.[1]||'';
   $('offer-evidence').value=offer?.evidence||'';
-  $('offer-evidence').placeholder=fromMcp?'摘录 '+state.rawTool+' 中相关优惠原文，并移除无关账户资料':'相关查询原文或你核对的信息';
+  $('offer-evidence').placeholder=fromMcp?'摘录 '+state.rawTool+' 中的相关优惠信息':'相关查询原文或你核对的信息';
   $('offer-verified').checked=offer?.verified||false;
   $('offer-dialog').showModal();
 }
@@ -153,7 +153,7 @@ async function callTool() {
     if(!args||typeof args!=='object'||Array.isArray(args))throw new Error('调用参数须为 JSON 对象');
     const data=await api('/api/mcp/call',{token:$('token').value,name:$('tool-name').value,arguments:args});
     state.raw=data.result;state.rawTool=data.tool;$('raw-result').textContent=JSON.stringify(data.result,null,2);$('raw-section').hidden=false;
-    $('offer-from-mcp').hidden=data.tool==='now-time-info';toast('查询完成，请阅读原文后核对候选。');
+    $('offer-from-mcp').hidden=data.tool==='now-time-info';toast('查询完成，可以建立候选了。');
   }catch(error){toast(error.message);}
   finally{$('call-tool').disabled=false;}
 }
@@ -175,7 +175,7 @@ $('cancel-dialog').addEventListener('click',()=>$('offer-dialog').close());
 $('offer-from-mcp').addEventListener('click',()=>openOffer(null,true));
 $('back-plan').addEventListener('click',()=>view('planner'));
 $('mode-label').addEventListener('click',()=>view('connection'));
-$('reload-demo').addEventListener('click',async()=>{await loadDemo();view('planner');toast('已重置为虚构演示数据。');});
+$('reload-demo').addEventListener('click',async()=>{await loadDemo();view('planner');toast('演示已重置。');});
 $('current-time').addEventListener('click',()=>{$('now').value=chinaNow();$('free-until').value=shiftMinutes($('now').value,90);calculate();});
 $('connect').addEventListener('click',connect);
 $('call-tool').addEventListener('click',callTool);

@@ -14,7 +14,7 @@ def main():
     parser = argparse.ArgumentParser(description="麦麦空档确定性规划器")
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument("--input", type=Path, help="输入 JSON 文件")
-    source.add_argument("--demo", action="store_true", help="使用明确标注的虚构资料")
+    source.add_argument("--demo", action="store_true", help="使用内置演示数据")
     parser.add_argument("--output", type=Path, help="输出 JSON；未指定则打印")
     parser.add_argument("--ics", type=Path, help="导出推荐安排为日历")
     parser.add_argument("--report", type=Path, help="导出 Markdown 安排")

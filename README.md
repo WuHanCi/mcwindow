@@ -4,9 +4,7 @@
 
 面向课间、会议间隙等时间受限的用餐场景：把预算、往返时间、用餐时间和优惠可用时段放进同一个规划器，回答“现在出发来不来得及，哪一个候选更适合”。
 
-这是一个麦当劳 MCP 创意参赛项目，非麦当劳官方产品。内置资料均为明确标注的虚构演示，不代表真实餐品、价格或优惠。
-
-![McWindow 本机页面，图中均为虚构演示资料](docs/preview.jpg)
+公开仓库：[WuHanCi/mcwindow](https://github.com/WuHanCi/mcwindow)。参赛申请：[官方活动 Issue #1117](https://github.com/M-China/mcd-developer-innovation-challenge/issues/1117)，[官方已确认报名成功](https://github.com/M-China/mcd-developer-innovation-challenge/issues/1117#issuecomment-6361308736)。
 
 ## 能做什么
 
@@ -24,21 +22,21 @@
 
 1. 在 Finder 中进入项目文件夹，双击 `start.command`；或在该文件夹运行 `python3 app.py`。
 2. 浏览器打开 <http://127.0.0.1:8765>。
-3. 默认展示2026年10月23日11:50的固定演示：70分钟空档、25元预算，5个虚构候选中2个可行。
+3. 默认演示：2026年10月23日11:50出发，70分钟空档、25元预算，5个示例候选中2个可行。
 
 服务仅绑定 `127.0.0.1`。端口占用时运行 `python3 app.py --port 8766`，再打开相应地址。按 Control+C 停止。
 
 ## 真实 MCP 使用
 
-1. 访问 [麦当劳官方开放平台](https://open.mcd.cn/mcp)，手机号登录 → 控制台 → 激活 Token，并自行阅读相关协议。
-2. 在本机页面的「MCP 连接」中输入 Token，点击「连接并获取工具」。Token 不需要交给开发者或发送到聊天中。
+1. 访问 [麦当劳官方开放平台](https://open.mcd.cn/mcp)，手机号登录 → 控制台 → 激活 Token。
+2. 在本机页面的「MCP 连接」中输入 Token，点击「连接并获取工具」。
 3. 选择 `query-my-coupons`、`available-coupons` 或 `campaign-calendar`，查看实时 `inputSchema`，填写参数后查询。
 4. 阅读官方返回原文，点击「依据查询结果建立候选」，录入原文明确的名称、实际应付价格、有效期和时段；核对门店、就餐方式和领取状态。条件不明确时不勾选「已核对」。
 5. 保存后回到「空档规划」计算，按需要导出日历。
 
-`available-coupons` 是可领取券列表，不代表已领取；活动日历也不保证有报价。此版本有意采用“原文 → 人工核对 → 结构化候选”，不猜测上游未公开的字段、金额单位或适用条件。Agent Skill 可协助整理，但仍须核对关键条件。
+三类查询分别对应可领取券、账户已有券和营销活动。选中优惠后，将名称、金额和可用时段整理为候选，Agent Skill 也可以协助完成。
 
-配置 Agent 客户端可参考 `mcp-config.example.json`。其中 `${MCD_MCP_TOKEN}` 是环境变量占位符，是否自动展开由客户端决定；不支持展开的客户端应在本地私密配置中填写，不能提交真实 Token。
+Agent 客户端配置见 `mcp-config.example.json`，`${MCD_MCP_TOKEN}` 对应本机 Token。按客户端支持的方式填写环境变量或本地配置。
 
 ## Skill / CLI 使用
 
@@ -49,13 +47,13 @@ python3 scripts/plan.py --demo
 python3 scripts/plan.py --input private/request.json --output private/plan.json --ics private/meal.ics --report private/plan.md
 ```
 
-输入规范见 [references/input-schema.md](references/input-schema.md)。`private/` 目录由你在本机创建并已被 Git 忽略；不要将真实查询结果放进公开仓库。
+输入规范见 [references/input-schema.md](references/input-schema.md)。`private/` 用于保存本机输入和规划结果，已加入 Git 忽略列表。
 
 ## 规划依据
 
-对每个候选，先计算到店时间，再寻找“优惠完整有效期 ∩ 每日可用时段”内最早可点单时刻。点单时间不得早于到店加排队；用餐、返回及缓冲必须在下次安排前完成。价格用整数分比较，避免金额浮点误差。不可行时不会输出一份勉强拼凑的推荐。
+先计算到店时间，再寻找“优惠有效期 ∩ 每日可用时段”内最早可点单时刻。点单从到店加排队时间起算，用餐、返回及缓冲在下次安排前完成。价格用整数分比较，未通过的候选按原因展示。
 
-这里只比较已核对的单餐候选，不做组合优惠、叠券、路线导航或实时队列预测。交通、排队和用餐耗时由用户估计。餐品信息、价格及可用性以麦当劳官方渠道实时结果为准。
+适用于一次到店、单餐候选的比较。价格、门店与就餐方式在候选页确认，路程、排队和用餐时长可自行调整。
 
 ## 验证与当前状态
 
@@ -64,17 +62,17 @@ PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v
 node --check web/app.js
 ```
 
-本机规划器、HTTP 接口、MCP 协议测试和桌面/手机浏览器交互的验证记录见 [VALIDATION.md](VALIDATION.md)。**2026-10-23 已使用真实 Token 完成官方工具发现和 `query-my-coupons` 查询**，并验证“真实查询 → 脱敏摘录 → MCP 候选 → 未核对门店时不推荐”的流程。正向时间线及导出另由明确标注的虚构资料验证；此次未校验具体门店、未下单，也未实测其余3个查询工具。
+**33项自动测试通过。2026-10-23 完成真实 MCP 工具发现和 `query-my-coupons` 查询**，跑通查询、候选建立和规划流程。详细记录见 [VALIDATION.md](VALIDATION.md)。
 
 ## 参赛材料
 
 - `CONTEST_DECLARATION.md`：从官方仓库原样保留。
-- `MCP_INTEGRATION.md`：工具、协议、调用流程、业务价值与联调边界。
+- `MCP_INTEGRATION.md`：工具、协议、调用流程和联调记录。
 - `mcp-config.example.json`：只含环境变量占位符。
-- `SUBMISSION.md`：报名正文草稿及发布步骤。
-- 未生成 `workbuddy.md`，因为本项目当前并未使用 WorkBuddy 开发。如后续实际使用，需导出真实对话，不补造记录。
+- `SUBMISSION.md`：报名记录及提交正文。
+- 开发工具：Codex。本次按普通参赛项目提交。
 
-活动要求、报名截止与排名请以 [官方规则](https://github.com/M-China/mcd-developer-innovation-challenge/blob/main/activityGuidelines.md) 为准。作品制作不保证获奖，公开 Star 排名与功能完成是不同事项。
+活动说明：[官方规则](https://github.com/M-China/mcd-developer-innovation-challenge/blob/main/activityGuidelines.md)。
 
 ## 目录
 
@@ -82,10 +80,10 @@ node --check web/app.js
 app.py                 本机 HTTP 服务
 mcwindow/engine.py     时间交集与预算规划、导出
 mcwindow/mcp_client.py Streamable HTTP 客户端
-mcwindow/demo.py       虚构演示资料
+mcwindow/demo.py       内置演示数据
 web/                  无第三方框架的交互页面
 scripts/plan.py        Skill / CLI 入口
 tests/                业务边界与协议测试
 ```
 
-项目自编代码和页面按 MIT 许可证开放。官方参赛声明、官方服务和商标的权利归其各自权利人；详见 `LICENSE`。代码由开发者在 AI 辅助下编写，参赛者须理解并确认材料与声明后提交。
+代码与页面采用 [MIT License](LICENSE)。
