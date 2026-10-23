@@ -2,7 +2,9 @@
 
 **给饭点，留个刚好的空。**
 
-面向课间、会议间隙等时间受限的用餐场景：把预算、往返时间、用餐时间和优惠可用时段放进同一个规划器，回答“现在出发来不来得及，哪一个候选更适合”。
+想吃顿麦当劳，又怕赶不上下一节课？
+
+告诉麦麦空档你想花多少钱、路上要多久、几点得回来，它会帮你挑出用得上的优惠，算好出发和返回的时间。少一点边吃边看表，多一点好好吃饭的时间。
 
 公开仓库：[WuHanCi/mcwindow](https://github.com/WuHanCi/mcwindow)。参赛申请：[官方活动 Issue #1117](https://github.com/M-China/mcd-developer-innovation-challenge/issues/1117)，[官方已确认报名成功](https://github.com/M-China/mcd-developer-innovation-challenge/issues/1117#issuecomment-6361308736)。
 

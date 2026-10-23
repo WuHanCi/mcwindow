@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta name="darkreader-lock">
   <title>麦麦空档 McWindow · 给饭点留个空</title>
-  <meta name="description" content="在预算、优惠时段和下一节课之间，找到刚刚好的用餐空档。麦当劳 MCP 创意参赛作品。">
+  <meta name="description" content="想吃顿麦当劳，又怕赶不上下一节课？麦麦空档帮你挑出用得上的优惠，算好出发和返回的时间。少一点边吃边看表，多一点好好吃饭的时间。">
   <link rel="icon" href="/mark.svg" type="image/svg+xml"><link rel="stylesheet" href="/style.css">
   <script src="/app.js" defer></script>
 </head>
@@ -23,7 +23,7 @@
   <header class="topbar"><div><span class="crumb">WORKSPACE</span><span class="slash">/</span><span id="page-name">空档规划</span></div><button id="mode-label" class="source-chip">◉ 演示数据</button></header>
   <div id="notice" class="notice" role="status"><span>演示模式</span> 用示例优惠体验一次空档规划。<button id="real-mode">使用我的数据 ↗</button></div>
   <section id="view-planner" class="view">
-    <section class="hero"><div><div class="eyebrow"><span></span> LESS RUSH, MORE LUNCH.</div><h1>给饭点，<br>留个<span class="accent">刚好的空。</span></h1><p>把预算、路程和下一节课放在一起。<br>这顿饭怎么安排，一眼就明白。</p></div><div class="hero-card"><div class="hero-card-top"><span>YOUR NEXT WINDOW</span><span>↗</span></div><div class="window-number"><strong id="hero-minutes">70</strong><span>分钟<br>可用空档</span></div><div class="window-line"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="hero-card-bottom"><span id="hero-time">11:50 — 13:00</span><span>给生活留点余量</span></div></div></section>
+    <section class="hero"><div><div class="eyebrow"><span></span> LESS RUSH, MORE LUNCH.</div><h1>给饭点，<br>留个<span class="accent">刚好的空。</span></h1><p>想吃麦当劳，又怕赶不上下一节课？<br>看看哪份优惠用得上，几点出发、几点回来。</p></div><div class="hero-card"><div class="hero-card-top"><span>YOUR NEXT WINDOW</span><span>↗</span></div><div class="window-number"><strong id="hero-minutes">70</strong><span>分钟<br>可用空档</span></div><div class="window-line"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="hero-card-bottom"><span id="hero-time">11:50 — 13:00</span><span>给生活留点余量</span></div></div></section>
     <form id="plan-form" class="panel planner-form">
       <div class="section-top"><h2><span class="step-no">01</span> 先看看你的空档</h2><button id="current-time" type="button" class="text-button">设为当前时间 ↗</button></div>
       <div class="primary-fields"><label>这顿饭的预算<div class="money-input"><span>¥</span><input id="budget" type="number" value="25.00" min="0" max="1000" step="0.01" required aria-label="这顿饭的预算"></div></label><label>从什么时候出发<input id="now" type="datetime-local" required></label><label>下次安排开始时间<input id="free-until" type="datetime-local" required></label></div>
