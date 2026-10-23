@@ -1,0 +1,105 @@
+{
+  "source": "demo",
+  "now": "2026-10-23T11:50+08:00",
+  "free_until": "2026-10-23T13:00+08:00",
+  "budget_fen": 2500,
+  "strategy": "budget",
+  "available_minutes": 70,
+  "buffer_minutes": 10,
+  "required_minutes": 52,
+  "feasible": [
+    {
+      "id": "lunch-a",
+      "name": "午间轻松组合 A",
+      "price_fen": 1990,
+      "valid_to": "2026-10-23T23:59+08:00",
+      "note": "仅用于功能演示",
+      "evidence": "McWindow 虚构演示资料，不代表麦当劳实际商品、价格或优惠。",
+      "source": "demo",
+      "depart_at": "2026-10-23T11:50+08:00",
+      "arrive_at": "2026-10-23T11:58+08:00",
+      "order_at": "2026-10-23T12:04+08:00",
+      "finish_at": "2026-10-23T12:24+08:00",
+      "return_at": "2026-10-23T12:32+08:00",
+      "buffer_until": "2026-10-23T12:42+08:00",
+      "spare_minutes": 28,
+      "unspent_fen": 510,
+      "wait_minutes": 6
+    },
+    {
+      "id": "lunch-b",
+      "name": "午间分享组合 B",
+      "price_fen": 2490,
+      "valid_to": "2026-10-23T23:59+08:00",
+      "note": "仅用于功能演示",
+      "evidence": "McWindow 虚构演示资料，不代表麦当劳实际商品、价格或优惠。",
+      "source": "demo",
+      "depart_at": "2026-10-23T11:50+08:00",
+      "arrive_at": "2026-10-23T11:58+08:00",
+      "order_at": "2026-10-23T12:04+08:00",
+      "finish_at": "2026-10-23T12:24+08:00",
+      "return_at": "2026-10-23T12:32+08:00",
+      "buffer_until": "2026-10-23T12:42+08:00",
+      "spare_minutes": 28,
+      "unspent_fen": 10,
+      "wait_minutes": 6
+    }
+  ],
+  "excluded": [
+    {
+      "id": "afternoon",
+      "name": "午后小食组合",
+      "price_fen": 1590,
+      "valid_to": "2026-10-23T23:59+08:00",
+      "note": "仅用于功能演示",
+      "evidence": "McWindow 虚构演示资料，不代表麦当劳实际商品、价格或优惠。",
+      "source": "demo",
+      "reasons": [
+        "可用时段与空档不匹配，或往返用餐时间不足"
+      ]
+    },
+    {
+      "id": "breakfast",
+      "name": "早间元气组合",
+      "price_fen": 1290,
+      "valid_to": "2026-10-23T10:30+08:00",
+      "note": "仅用于功能演示",
+      "evidence": "McWindow 虚构演示资料，不代表麦当劳实际商品、价格或优惠。",
+      "source": "demo",
+      "reasons": [
+        "优惠已过期"
+      ]
+    },
+    {
+      "id": "over-budget",
+      "name": "丰盛搭配组合",
+      "price_fen": 3290,
+      "valid_to": "2026-10-23T23:59+08:00",
+      "note": "仅用于功能演示",
+      "evidence": "McWindow 虚构演示资料，不代表麦当劳实际商品、价格或优惠。",
+      "source": "demo",
+      "reasons": [
+        "超出预算 ¥7.90"
+      ]
+    }
+  ],
+  "recommendation": {
+    "id": "lunch-a",
+    "name": "午间轻松组合 A",
+    "price_fen": 1990,
+    "valid_to": "2026-10-23T23:59+08:00",
+    "note": "仅用于功能演示",
+    "evidence": "McWindow 虚构演示资料，不代表麦当劳实际商品、价格或优惠。",
+    "source": "demo",
+    "depart_at": "2026-10-23T11:50+08:00",
+    "arrive_at": "2026-10-23T11:58+08:00",
+    "order_at": "2026-10-23T12:04+08:00",
+    "finish_at": "2026-10-23T12:24+08:00",
+    "return_at": "2026-10-23T12:32+08:00",
+    "buffer_until": "2026-10-23T12:42+08:00",
+    "spare_minutes": 28,
+    "unspent_fen": 510,
+    "wait_minutes": 6
+  },
+  "message": "有 2 个候选能落进你的空档"
+}

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta name="darkreader-lock">
+  <title>麦麦空档 McWindow · 给饭点留个空</title>
+  <meta name="description" content="在预算、优惠时段和下一节课之间，找到刚刚好的用餐空档。麦当劳 MCP 创意参赛作品。">
+  <link rel="icon" href="/mark.svg" type="image/svg+xml"><link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+<aside class="sidebar">
+  <a class="brand" href="/"><img src="/mark.svg" alt="" width="42" height="42"><span>麦麦空档<small>McWindow</small></span></a>
+  <p class="nav-label">我的饭点工作台</p>
+  <nav aria-label="主导航">
+    <button class="nav active" data-view="planner"><span class="nav-icon">◷</span> 空档规划 <span class="nav-arrow">↗</span></button>
+    <button class="nav" data-view="offers"><span class="nav-icon">▤</span> 优惠候选 <span id="offer-count" class="count">5</span></button>
+    <button class="nav" data-view="connection"><span class="nav-icon">⌘</span> MCP 连接</button>
+  </nav>
+  <div class="sidebar-note"><span class="note-star">✳</span><strong>饭点，不必赶场。</strong><p>时间够、预算合适，<br>再愉快出发。</p></div>
+  <div class="sidebar-bottom"><span class="status-dot"></span> 本机运行 · 数据由你掌握<small>1024 程序员节创意参赛作品<br>非麦当劳官方产品</small></div>
+</aside>
+<main>
+  <header class="topbar"><div><span class="crumb">WORKSPACE</span><span class="slash">/</span><span id="page-name">空档规划</span></div><button id="mode-label" class="source-chip">◉ 演示数据</button></header>
+  <div id="notice" class="notice" role="status"><span>演示模式</span> 当前使用虚构优惠和 10 月 23 日 11:50 的演示时钟，所有金额均非真实报价。<button id="real-mode">使用我的数据 ↗</button></div>
+  <section id="view-planner" class="view">
+    <section class="hero"><div><div class="eyebrow"><span></span> LESS RUSH, MORE LUNCH.</div><h1>给饭点，<br>留个<span class="accent">刚好的空。</span></h1><p>把预算、路程和下一节课放在一起。<br>这顿饭怎么安排，一眼就明白。</p></div><div class="hero-card"><div class="hero-card-top"><span>YOUR NEXT WINDOW</span><span>↗</span></div><div class="window-number"><strong id="hero-minutes">70</strong><span>分钟<br>可用空档</span></div><div class="window-line"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="hero-card-bottom"><span id="hero-time">11:50 — 13:00</span><span>给生活留点余量</span></div></div></section>
+    <form id="plan-form" class="panel planner-form">
+      <div class="section-top"><h2><span class="step-no">01</span> 先看看你的空档</h2><button id="current-time" type="button" class="text-button">设为当前时间 ↗</button></div>
+      <div class="primary-fields"><label>这顿饭的预算<div class="money-input"><span>¥</span><input id="budget" type="number" value="25.00" min="0" max="1000" step="0.01" required aria-label="这顿饭的预算"></div></label><label>从什么时候出发<input id="now" type="datetime-local" required></label><label>下次安排开始时间<input id="free-until" type="datetime-local" required></label></div>
+      <div class="time-fields"><label>单程路程<span class="unit-input"><input id="travel" type="number" min="0" max="120" value="8" required><span>分钟</span></span></label><label>排队预留<span class="unit-input"><input id="queue" type="number" min="0" max="120" value="6" required><span>分钟</span></span></label><label>安心用餐<span class="unit-input"><input id="meal" type="number" min="1" max="120" value="20" required><span>分钟</span></span></label><label>回程缓冲<span class="unit-input"><input id="buffer" type="number" min="0" max="120" value="10" required><span>分钟</span></span></label></div>
+      <div class="form-bottom"><label class="sort-label">优先考虑 <select id="strategy"><option value="budget">花得更少</option><option value="time">更早返回</option></select></label><button class="button primary" type="submit" id="calculate">安排一下 <span>↗</span></button></div>
+    </form>
+    <section class="results" aria-live="polite"><div class="section-top results-heading"><h2><span class="step-no">02</span> 空档里的好选择</h2><span id="result-count" class="muted">正在计算…</span></div><div id="result"></div><div id="alternatives"></div><details class="exclusions"><summary>查看未采用的候选 <span id="excluded-count">0</span></summary><div id="excluded"></div></details></section>
+  </section>
+  <section id="view-offers" class="view" hidden><div class="page-heading"><div class="eyebrow">THE INPUT MATTERS.</div><h1>每个选择，<br>都有据可查。</h1><p>录入或核对优惠的价格、时段和门店条件，再交给时间规划器。</p></div><div class="panel"><div class="section-top"><h2>我的优惠候选</h2><button id="new-offer" class="button primary">添加候选 ＋</button></div><div class="info-box">优惠是否适用具体门店、就餐方式和商品，以官方返回结果及券面为准。路程与排队时间是你的估计。</div><div id="offers-list"></div><button id="back-plan" class="button outline">去安排我的空档 ↗</button></div></section>
+  <section id="view-connection" class="view" hidden><div class="page-heading"><div class="eyebrow">CONNECTED TO THE SOURCE.</div><h1>让选择，<br>接上真实信息。</h1><p>直接查询麦当劳官方 MCP，在核对结果后建立你的候选。</p></div><div class="connection-grid"><div class="panel"><div class="section-top"><h2>连接官方 MCP</h2><span class="tiny-badge">4 个查询工具</span></div><label>MCP Token<input id="token" type="password" autocomplete="off" spellcheck="false" placeholder="仅保留在当前页面内存中"></label><div class="connection-actions"><button id="connect" class="button primary">连接并获取工具 ↗</button><button id="forget-token" class="text-button">清除</button></div><p class="small-text">Token 经本机服务发送至 https://mcp.mcd.cn，不写入文件、浏览器存储或日志。刷新页面即清空。</p><a class="external" href="https://open.mcd.cn/mcp" target="_blank" rel="noreferrer">还没申请？前往官方开放平台 ↗</a><div id="connection-status" class="connection-status" role="status">尚未连接。演示模式无需 Token。</div></div><div class="panel connection-help"><span class="big-symbol">⌘</span><h2>查原文，再做决定。</h2><ol><li>登录官方开放平台，进入控制台激活 Token。</li><li>在左侧连接，获取当前工具与参数定义。</li><li>查询优惠或活动，阅读完整原文。</li><li>核对价格、门店、可用时段后建立候选。</li></ol><p>本作品只提供信息查询和本机规划。</p></div></div><div id="tool-workspace" class="panel" hidden><div class="section-top"><h2>官方查询工作台</h2><span class="tiny-badge">实时工具定义</span></div><label>选择工具<select id="tool-name"></select></label><p id="tool-description" class="small-text"></p><details><summary>查看服务器返回的参数定义</summary><pre id="tool-schema"></pre></details><label>调用参数（JSON）<textarea id="tool-arguments" rows="5" spellcheck="false">{}</textarea></label><button id="call-tool" class="button primary">执行查询 ↗</button><div id="raw-section" hidden><h3>官方返回原文</h3><p class="small-text">原文仅在当前页面显示；如价格或日期不清楚，请保留为空，先到官方渠道核实。</p><pre id="raw-result"></pre><button id="offer-from-mcp" class="button outline">依据查询结果建立候选 ＋</button></div></div></section>
+  <footer><span>McWindow / 让饭点刚好落进空档。</span><span>时间为预估 · 优惠以官方渠道为准</span><button id="reload-demo" class="text-button">重置演示 ↺</button></footer>
+</main>
+<dialog id="offer-dialog"><form id="offer-form"><div class="section-top"><h2 id="offer-dialog-title">添加优惠候选</h2><button id="close-dialog" class="icon-button" type="button" aria-label="关闭">×</button></div><p class="small-text" id="offer-source-hint"></p><label>候选名称<input id="offer-name" maxlength="120" required placeholder="如：券面上的套餐名称"></label><div class="dialog-grid"><label>实际应付（元）<input id="offer-price" type="number" min="0" max="1000" step="0.01" placeholder="不清楚可留空"></label><label>价格 / 使用条件备注<input id="offer-note" maxlength="500" placeholder="门店、堂食或外带限制等"></label><label>有效期开始<input id="offer-start" type="datetime-local" required></label><label>有效期结束<input id="offer-end" type="datetime-local" required></label><label>每日可用开始（选填）<input id="offer-window-start" type="time"></label><label>每日可用结束（选填）<input id="offer-window-end" type="time"></label></div><label>信息依据<textarea id="offer-evidence" maxlength="2000" rows="3" placeholder="相关查询原文或你核对的信息"></textarea></label><label class="checkbox-label"><input id="offer-verified" type="checkbox">我已核对价格、门店和使用条件</label><p id="offer-error" class="error-text" role="alert"></p><div class="dialog-actions"><button id="cancel-dialog" class="button outline" type="button">取消</button><button class="button primary" type="submit">保存候选 ↗</button></div></form></dialog>
+<div id="toast" class="toast" role="alert" hidden></div>
+</body></html>

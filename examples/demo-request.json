@@ -1,0 +1,78 @@
+{
+  "source": "demo",
+  "now": "2026-10-23T11:50:00+08:00",
+  "free_until": "2026-10-23T13:00:00+08:00",
+  "budget_fen": 2500,
+  "travel_minutes": 8,
+  "queue_minutes": 6,
+  "meal_minutes": 20,
+  "buffer_minutes": 10,
+  "strategy": "budget",
+  "offers": [
+    {
+      "id": "lunch-a",
+      "name": "午间轻松组合 A",
+      "price_fen": 1990,
+      "valid_from": "2026-10-23T00:00:00+08:00",
+      "valid_to": "2026-10-23T23:59:00+08:00",
+      "daily_windows": [
+        [
+          "11:00",
+          "14:00"
+        ]
+      ],
+      "verified": true,
+      "evidence": "McWindow 虚构演示资料，不代表麦当劳实际商品、价格或优惠。",
+      "note": "仅用于功能演示"
+    },
+    {
+      "id": "lunch-b",
+      "name": "午间分享组合 B",
+      "price_fen": 2490,
+      "valid_from": "2026-10-23T00:00:00+08:00",
+      "valid_to": "2026-10-23T23:59:00+08:00",
+      "daily_windows": [],
+      "verified": true,
+      "evidence": "McWindow 虚构演示资料，不代表麦当劳实际商品、价格或优惠。",
+      "note": "仅用于功能演示"
+    },
+    {
+      "id": "afternoon",
+      "name": "午后小食组合",
+      "price_fen": 1590,
+      "valid_from": "2026-10-23T00:00:00+08:00",
+      "valid_to": "2026-10-23T23:59:00+08:00",
+      "daily_windows": [
+        [
+          "14:00",
+          "17:00"
+        ]
+      ],
+      "verified": true,
+      "evidence": "McWindow 虚构演示资料，不代表麦当劳实际商品、价格或优惠。",
+      "note": "仅用于功能演示"
+    },
+    {
+      "id": "breakfast",
+      "name": "早间元气组合",
+      "price_fen": 1290,
+      "valid_from": "2026-10-23T00:00:00+08:00",
+      "valid_to": "2026-10-23T10:30:00+08:00",
+      "daily_windows": [],
+      "verified": true,
+      "evidence": "McWindow 虚构演示资料，不代表麦当劳实际商品、价格或优惠。",
+      "note": "仅用于功能演示"
+    },
+    {
+      "id": "over-budget",
+      "name": "丰盛搭配组合",
+      "price_fen": 3290,
+      "valid_from": "2026-10-23T00:00:00+08:00",
+      "valid_to": "2026-10-23T23:59:00+08:00",
+      "daily_windows": [],
+      "verified": true,
+      "evidence": "McWindow 虚构演示资料，不代表麦当劳实际商品、价格或优惠。",
+      "note": "仅用于功能演示"
+    }
+  ]
+}
